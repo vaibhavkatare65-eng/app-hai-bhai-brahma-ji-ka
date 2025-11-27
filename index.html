@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brahma Path | The Sacred Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Tiro+Devanagari+Hindi&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brahma-bg': '#FFF8F0', /* Very light Sandalwood */
+              'brahma-dark': '#4A2C2A', /* Deep Earth/Brown */
+              'brahma-saffron': '#D97706', /* Deep Saffron */
+              'brahma-gold': '#B45309',
+              'brahma-orange': '#EA580C', /* Agni Orange */
+              'brahma-card': '#FFFBF7',
+            },
+            fontFamily: {
+              serif: ['Playfair Display', 'Merriweather', 'serif'],
+              hindi: ['Tiro Devanagari Hindi', 'serif'],
+              display: ['Cinzel', 'serif'],
+            },
+            backgroundImage: {
+              'saffron-gradient': 'linear-gradient(135deg, #EA580C 0%, #B91C1C 100%)',
+              'gold-gradient': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Merriweather', serif;
+        background-color: #FFF8F0;
+        color: #4A2C2A;
+      }
+      h1, h2, h3, .font-display {
+        font-family: 'Cinzel', serif;
+      }
+      .font-hindi {
+        font-family: 'Tiro Devanagari Hindi', serif;
+      }
+      
+      /* Subtle Mandala Pattern Background */
+      .bg-mandala {
+        background-color: #FFF8F0;
+        background-image: 
+          radial-gradient(#D97706 0.5px, transparent 0.5px),
+          radial-gradient(#D97706 0.5px, #FFF8F0 0.5px);
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+        opacity: 1;
+      }
+      
+      .bg-mandala::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(255,152,0,0.05) 0%, rgba(255,255,255,0) 70%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #FCE7D6; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #EA580C; 
+        border-radius: 3px;
+      }
+      
+      /* Animations */
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 15px rgba(234, 88, 12, 0.3); }
+        50% { box-shadow: 0 0 25px rgba(234, 88, 12, 0.6); }
+      }
+      .animate-pulse-glow {
+        animation: pulse-glow 3s infinite;
+      }
+
+      .card-tilak {
+        border-top: 4px solid #EA580C;
+        position: relative;
+      }
+      .card-tilak::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: #F59E0B; /* Gold center */
+      }
+
+      .btn-saffron {
+        background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
+        color: #FFF;
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.4);
+        transition: all 0.3s ease;
+      }
+      .btn-saffron:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.3"
+  }
+}
+</script>
+</head>
+  <body class="bg-mandala">
+    <div id="root"></div>
+  </body>
+</html>

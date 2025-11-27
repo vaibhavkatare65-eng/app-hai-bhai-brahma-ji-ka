@@ -1,0 +1,8 @@
+{
+  "name": "Brahma Path",
+  "description": "The Sacred 108-Day Journey to Self-Mastery and Brahmacharya transformation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
