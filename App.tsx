@@ -308,25 +308,47 @@ const AuthPaymentScreen = ({ onComplete, tempUser }: { onComplete: (user: Partia
       let result;
       if (authMode === 'signup') {
         result = await supabase.auth.signUp({ email, password });
+        
         if (result.error) throw result.error;
+        
+        // Handle case where Supabase returns data but user might need confirmation or email provider is misconfigured but returns vague success
         if (result.data.user && !result.data.session) {
-           setError("Account created. Please check your email.");
-           setLoading(false); return;
+           setError("Account created. Please check your email to confirm.");
+           setLoading(false); 
+           return;
         }
+
         if (result.data.user && result.data.session) {
-          await supabase.from('profiles').upsert({
-             id: result.data.user.id, email: email, age: Number(tempUser.age) || 0,
-             reason: tempUser.reason || "Not specified", start_date: new Date().toISOString(),
-             current_day: 1, unlocked_badges: [], journal_entries: {}, has_paid: false, is_onboarded: true
+          // Robust upsert
+          const { error: profileError } = await supabase.from('profiles').upsert({
+             id: result.data.user.id, 
+             email: email, 
+             age: Number(tempUser.age) || 0,
+             reason: tempUser.reason || "Not specified", 
+             start_date: new Date().toISOString(),
+             current_day: 1, 
+             unlocked_badges: [], 
+             journal_entries: {}, 
+             has_paid: false, 
+             is_onboarded: true
           });
+          
+          if (profileError) {
+             console.error("Profile creation error:", profileError);
+             // We continue anyway, as the profile might already exist or we can create it later.
+          }
           setView('payment');
         }
+
       } else {
+        // Sign In
         result = await supabase.auth.signInWithPassword({ email, password });
         if (result.error) throw result.error;
+
         if (result.data.user) {
           const { data: profile } = await supabase.from('profiles').select('*').eq('id', result.data.user.id).single();
           if (!profile) {
+              // Create profile if missing
               await supabase.from('profiles').upsert({
                  id: result.data.user.id, email: email, age: Number(tempUser.age) || 0,
                  reason: tempUser.reason || "Not specified", start_date: new Date().toISOString(),
@@ -342,8 +364,18 @@ const AuthPaymentScreen = ({ onComplete, tempUser }: { onComplete: (user: Partia
       }
       setLoading(false);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Authentication failed.');
+      console.error("Auth error:", err);
+      // Specific handling for "Email logins are disabled"
+      if (err.message && (err.message.includes("Email logins are disabled") || err.message.includes("Signups not allowed"))) {
+          setError("Email login is disabled in Supabase. Please enable 'Email' provider in Supabase Dashboard > Authentication > Providers.");
+      } else if (err.message && err.message.includes("User already registered")) {
+        setError("User already registered. Please sign in.");
+        setAuthMode('signin');
+      } else if (err.message && err.message.includes("Invalid login credentials")) {
+        setError("Invalid email or password.");
+      } else {
+        setError(err.message || 'Authentication failed. Please check your connection.');
+      }
       setLoading(false);
     }
   };
@@ -370,7 +402,8 @@ const AuthPaymentScreen = ({ onComplete, tempUser }: { onComplete: (user: Partia
           
           {error && (
             <div className={`p-3 rounded-lg mb-4 text-xs flex items-center gap-2 ${error.includes("check") ? "bg-green-50 text-green-700" : "bg-red-50 text-red-500"}`}>
-              <AlertCircle size={12} /> {error}
+              <AlertCircle size={16} className="flex-shrink-0" /> 
+              <span>{error}</span>
             </div>
           )}
 
